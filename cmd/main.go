@@ -14,14 +14,16 @@ func main() {
 	app := fx.New(
 		fx.Provide(
 			services.NewTmdbService,
-			views.NewModel,
+			views.NewSidebar,
+			views.NewContent,
+			views.NewLayout,
 		),
 		fx.Invoke(runUI),
 	)
 	app.Run()
 }
 
-func runUI(m views.Model) {
+func runUI(m views.Layout) {
 	p := tea.NewProgram(m, tea.WithAltScreen())
 	if _, err := p.Run(); err != nil {
 		log.Fatal(err)

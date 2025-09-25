@@ -1,59 +1,45 @@
 package views
 
 import (
-	"fmt"
 	"os"
 
-	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/kalelc/movies/internal/domain"
-	"github.com/kalelc/movies/internal/services"
 	"golang.org/x/term"
 )
 
-type Model struct {
-	list   list.Model
-	detail string
+type Layout struct {
+	sidebar Sidebar
+	content Content
 }
 
-func NewModel(s *services.TmdbService) Model {
-
-	movies := s.GetMovies()
-	items := make([]list.Item, len(movies))
-	for i, m := range movies {
-		items[i] = m
+func NewLayout(sidebar Sidebar, content Content) Layout {
+	return Layout{
+		sidebar: sidebar,
+		content: content,
 	}
-
-	const defaultWidth = 40
-	const defaultHeight = 40
-	l := list.New(items, list.NewDefaultDelegate(), defaultWidth, defaultHeight)
-	l.Title = "Menú"
-
-	return Model{list: l}
 }
 
-func (m Model) Init() tea.Cmd {
+func (l Layout) Init() tea.Cmd {
 	return nil
 }
 
-func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (l Layout) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
+	var selected *domain.Movie
 
-	switch msg := msg.(type) {
-	case tea.KeyMsg:
-		switch msg.String() {
-		case "enter":
-			if sel, ok := m.list.SelectedItem().(domain.Movie); ok {
-				m.detail = fmt.Sprintf("%s\n%s\n%s\n%s\n%f.2\n%d\n%f.2", sel.Name, sel.Overview, sel.ReleaseDate, sel.PosterPath, sel.VoteAverage, sel.VoteCount, sel.Popularity)
-			}
-		}
+	l.sidebar, cmd, selected = l.sidebar.Update(msg)
+	l.content, _ = l.content.Update(msg)
+
+	if selected != nil {
+		l.content.SetData(selected.Name, selected.Overview)
 	}
-	m.list, cmd = m.list.Update(msg)
-	return m, cmd
+
+	return l, cmd
 }
 
-func (m Model) View() string {
+func (l Layout) View() string {
 	width, height, err := term.GetSize(int(os.Stdout.Fd()))
 	if err != nil {
 		width = 80
@@ -62,15 +48,10 @@ func (m Model) View() string {
 
 	col1Width := int(float64(width) * 0.30)
 	col2Width := (width - 5) - col1Width
-
 	rowHeight := height - 2
 
-	col1Style := lipgloss.NewStyle().
-		Width(col1Width).
-		Height(rowHeight).
-		Border(lipgloss.NormalBorder()).
-		BorderForeground(lipgloss.Color("62")).
-		Padding(0, 1)
+	col1Style := lipgloss.NewStyle()
+	renderedCol1 := col1Style.Render(l.sidebar.View())
 
 	col2Style := lipgloss.NewStyle().
 		Width(col2Width).
@@ -79,8 +60,7 @@ func (m Model) View() string {
 		BorderForeground(lipgloss.Color("62")).
 		Padding(0, 1)
 
-	renderedCol1 := col1Style.Render(m.list.View())
-	renderedCol2 := col2Style.Render(m.detail)
+	renderedCol2 := col2Style.Render(l.content.View())
 
 	return lipgloss.JoinHorizontal(lipgloss.Top, renderedCol1, renderedCol2)
 }
