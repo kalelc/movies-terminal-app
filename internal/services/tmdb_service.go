@@ -22,7 +22,7 @@ func NewTmdbService() *TmdbService {
 	return &TmdbService{TmdbClient: tmdbClient}
 }
 
-func (s *TmdbService) GEtMovies() []domain.Movie {
+func (s *TmdbService) GetMovies() []domain.Movie {
 	options := map[string]string{
 		"language": "es-ES",
 		"page":     "1",
@@ -33,13 +33,21 @@ func (s *TmdbService) GEtMovies() []domain.Movie {
 	}
 	var movies []domain.Movie
 	for _, movie := range popularMovies.Results {
+		var genres []string
+
+		for _, g := range movie.Genres {
+			genres = append(genres, g.Name)
+
+		}
 		movies = append(
 			movies,
 			domain.Movie{
-				Id:         movie.ID,
-				Name:       movie.Title,
-				Overview:   movie.Overview,
-				Popularity: movie.Popularity,
+				Id:          movie.ID,
+				Name:        movie.Title,
+				Overview:    movie.Overview,
+				ReleaseDate: movie.ReleaseDate,
+				Popularity:  movie.Popularity,
+				Genres:      genres,
 			},
 		)
 	}
