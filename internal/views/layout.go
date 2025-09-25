@@ -69,11 +69,3 @@ func (m Model) View() string {
 
 	return lipgloss.JoinHorizontal(lipgloss.Top, renderedCol1, renderedCol2)
 }
-
-//func main() {
-//	p := tea.NewProgram(newModel(), tea.WithAltScreen())
-//	if _, err := p.Run(); err != nil {
-//		fmt.Println("Error:", err)
-//		os.Exit(1)
-//	}
-//}
