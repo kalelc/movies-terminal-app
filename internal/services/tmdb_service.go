@@ -33,12 +33,6 @@ func (s *TmdbService) GetMovies() []domain.Movie {
 	}
 	var movies []domain.Movie
 	for _, movie := range popularMovies.Results {
-		var genres []string
-
-		for _, g := range movie.Genres {
-			genres = append(genres, g.Name)
-
-		}
 		movies = append(
 			movies,
 			domain.Movie{
@@ -47,7 +41,9 @@ func (s *TmdbService) GetMovies() []domain.Movie {
 				Overview:    movie.Overview,
 				ReleaseDate: movie.ReleaseDate,
 				Popularity:  movie.Popularity,
-				Genres:      genres,
+				PosterPath:  movie.PosterPath,
+				VoteAverage: movie.VoteAverage,
+				VoteCount:   movie.VoteCount,
 			},
 		)
 	}

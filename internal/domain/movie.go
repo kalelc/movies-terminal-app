@@ -6,8 +6,9 @@ type Movie struct {
 	Overview    string
 	Popularity  float32
 	ReleaseDate string
-	Genres      []string
 	PosterPath  string
+	VoteAverage float32
+	VoteCount   int64
 }
 
 func (m Movie) Title() string {

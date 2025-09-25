@@ -45,7 +45,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg.String() {
 		case "enter":
 			if sel, ok := m.list.SelectedItem().(domain.Movie); ok {
-				m.detail = fmt.Sprintf("%s\n%s\n%s", sel.Name, sel.Overview, sel.ReleaseDate)
+				m.detail = fmt.Sprintf("%s\n%s\n%s\n%s\n%f.2\n%d\n%f.2", sel.Name, sel.Overview, sel.ReleaseDate, sel.PosterPath, sel.VoteAverage, sel.VoteCount, sel.Popularity)
 			}
 		}
 	}
