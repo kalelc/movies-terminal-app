@@ -46,11 +46,6 @@ func (c *Content) SetData(title, desc string) {
 	c.viewport.SetContent(content)
 }
 
-func (c *Content) Resize(width, height int) {
-	c.viewport.Width = width
-	c.viewport.Height = height
-}
-
 func (c *Content) Update(msg tea.Msg) (Content, tea.Cmd) {
 	var cmd tea.Cmd
 	c.viewport, cmd = c.viewport.Update(msg)
