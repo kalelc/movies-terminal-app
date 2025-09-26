@@ -43,7 +43,6 @@ func (s *TmdbService) GetMovies() []domain.Movie {
 				Popularity:  movie.Popularity,
 				PosterPath:  movie.PosterPath,
 				VoteAverage: movie.VoteAverage,
-				VoteCount:   movie.VoteCount,
 			},
 		)
 	}

@@ -16,7 +16,7 @@ type Sidebar struct {
 
 func NewSidebar(s *services.TmdbService) Sidebar {
 	width, height, _ := term.GetSize(int(os.Stdout.Fd()))
-	width = int(float64(width)*0.30) - 10
+	width = int(float64(width)*0.30) - 20
 	height = height - 2
 
 	movies := s.GetMovies()

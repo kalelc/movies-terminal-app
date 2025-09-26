@@ -16,13 +16,13 @@ var (
 	titleStyle = func() lipgloss.Style {
 		b := lipgloss.RoundedBorder()
 		b.Right = "├"
-		return lipgloss.NewStyle().BorderStyle(b).Padding(0, 1)
+		return lipgloss.NewStyle().Foreground(lipgloss.Color("#FFFFFF")).BorderStyle(b).Padding(0, 1).BorderForeground(lipgloss.Color("#7D56F4"))
 	}()
 
 	infoStyle = func() lipgloss.Style {
 		b := lipgloss.RoundedBorder()
 		b.Left = "┤"
-		return titleStyle.BorderStyle(b)
+		return titleStyle.BorderStyle(b).BorderForeground(lipgloss.Color("#7D56F4"))
 	}()
 )
 
@@ -34,7 +34,7 @@ type Content struct {
 
 func NewContent() Content {
 	width, height, _ := term.GetSize(int(os.Stdout.Fd()))
-	width = int(float64(width)*0.70) - 5
+	width = int(float64(width) * 0.70)
 	height = height - 2
 
 	vp := viewport.New(width, height)
@@ -44,11 +44,12 @@ func NewContent() Content {
 
 func (c *Content) SetData(movie *domain.Movie) {
 	c.title = movie.Name
-	c.body = movie.Overview
+	c.body = fmt.Sprintf("\n📖 %s\n\n⏰ %s\n⭐ %.2f\n🗳️ %.2f", movie.Overview, movie.ReleaseDate, movie.VoteAverage, movie.Popularity)
 
 	bodyStyle := lipgloss.NewStyle().
-		Background(lipgloss.Color("#7D56F4")).
-		Width(c.viewport.Width).Render(c.body)
+		Width(c.viewport.Width).
+		Foreground(lipgloss.Color("#FFFFFF")).
+		Render(c.body)
 
 	content := fmt.Sprintf(
 		"%s\n%s\n%s",
@@ -79,5 +80,6 @@ func (c *Content) headerView() string {
 func (c *Content) footerView() string {
 	info := infoStyle.Render(fmt.Sprintf("%3.f%%", c.viewport.ScrollPercent()*100))
 	line := strings.Repeat("─", max(0, c.viewport.Width-lipgloss.Width(info)))
+
 	return lipgloss.JoinHorizontal(lipgloss.Center, line, info)
 }

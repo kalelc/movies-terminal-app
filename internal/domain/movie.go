@@ -8,7 +8,6 @@ type Movie struct {
 	ReleaseDate string
 	PosterPath  string
 	VoteAverage float32
-	VoteCount   int64
 }
 
 func (m Movie) Title() string {
