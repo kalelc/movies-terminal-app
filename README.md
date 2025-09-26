@@ -1,4 +1,4 @@
-# README
+# Movie Terminal App
 
 ## How to Use?
 
@@ -8,4 +8,6 @@
 APIKEY=<>
 ```
 
-2. execute `make run` command
+2. run export `$(grep -v  '^#' .env | xargs)`
+
+3. execute `make run`
