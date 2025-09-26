@@ -30,7 +30,7 @@ func (l Layout) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	l.content, _ = l.content.Update(msg)
 
 	if selected != nil {
-		l.content.SetData(selected.Name, selected.Overview)
+		l.content.SetData(selected)
 	}
 
 	return l, cmd
